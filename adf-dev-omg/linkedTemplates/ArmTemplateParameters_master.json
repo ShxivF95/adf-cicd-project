@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "adf-dev-omg"
 		},
+		"LS_Rest_properties_typeProperties_url": {
+			"value": "https://swapi.dev/api/people/?page=1"
+		},
 		"hisADLS_properties_typeProperties_url": {
 			"value": "https://hisadls.dfs.core.windows.net/"
 		},

@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adf-dev-omg"
 		},
+		"LS_Rest_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://swapi.dev/api/people/?page=1"
+		},
 		"hisADLS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://hisadls.dfs.core.windows.net/"
@@ -37,6 +41,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"LS_Rest_properties_typeProperties_url": {
+						"value": "[parameters('LS_Rest_properties_typeProperties_url')]"
 					},
 					"hisADLS_properties_typeProperties_url": {
 						"value": "[parameters('hisADLS_properties_typeProperties_url')]"
