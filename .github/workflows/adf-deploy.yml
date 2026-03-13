@@ -25,6 +25,6 @@ jobs:
         run: |
           az deployment group create \
             --resource-group rg-data-test \
-            --template-file factory/ARMTemplateForFactory.json \
-            --parameters factory/ARMTemplateParametersForFactory.json \
+            --template-file adf-dev-omg/ARMTemplateForFactory.json \
+            --parameters adf-dev-omg/ARMTemplateParametersForFactory.json \
             --parameters factoryName=adf-test-omg
