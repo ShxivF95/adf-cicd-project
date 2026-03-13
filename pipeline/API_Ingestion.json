@@ -1,0 +1,195 @@
+{
+	"name": "API_Ingestion",
+	"properties": {
+		"activities": [
+			{
+				"name": "API_to_ADLS",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"supportRFC5988": "true"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['results'][0]['name']"
+								},
+								"sink": {
+									"name": "name"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['height']"
+								},
+								"sink": {
+									"name": "height"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['mass']"
+								},
+								"sink": {
+									"name": "mass"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['hair_color']"
+								},
+								"sink": {
+									"name": "hair_color"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['skin_color']"
+								},
+								"sink": {
+									"name": "skin_color"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['eye_color']"
+								},
+								"sink": {
+									"name": "eye_color"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['birth_year']"
+								},
+								"sink": {
+									"name": "birth_year"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['gender']"
+								},
+								"sink": {
+									"name": "gender"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['homeworld']"
+								},
+								"sink": {
+									"name": "homeworld"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['films'][0]"
+								},
+								"sink": {
+									"name": "results'][0]['films']["
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['species'][0]"
+								},
+								"sink": {
+									"name": "results'][0]['species']["
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['vehicles'][0]"
+								},
+								"sink": {
+									"name": "results'][0]['vehicles']["
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['starships'][0]"
+								},
+								"sink": {
+									"name": "results'][0]['starships']["
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['created']"
+								},
+								"sink": {
+									"name": "created"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['edited']"
+								},
+								"sink": {
+									"name": "edited"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['url']"
+								},
+								"sink": {
+									"name": "url"
+								}
+							}
+						],
+						"collectionReference": "$['results']"
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_Rest",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": "landing",
+							"folder": "API_Data",
+							"file_name": "swapiwa.csv"
+						}
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}
