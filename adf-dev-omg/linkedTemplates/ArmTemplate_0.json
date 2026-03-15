@@ -116,6 +116,34 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DS_Json')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "hisADLS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat('swapi_', formatDateTime(utcNow(), 'yyyyMMdd'), '.json')",
+							"type": "Expression"
+						},
+						"folderPath": "API_Data",
+						"fileSystem": "landing"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/hisADLS')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/API_Ingestion')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -144,14 +172,14 @@
 								}
 							},
 							"sink": {
-								"type": "DelimitedTextSink",
+								"type": "JsonSink",
 								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
+									"type": "AzureBlobFSWriteSettings",
+									"copyBehavior": "FlattenHierarchy"
 								},
 								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
+									"type": "JsonWriteSettings",
+									"filePattern": "setOfObjects"
 								}
 							},
 							"enableStaging": false,
@@ -160,7 +188,7 @@
 								"mappings": [
 									{
 										"source": {
-											"path": "$['results'][0]['name']"
+											"path": "$['name']"
 										},
 										"sink": {
 											"name": "name"
@@ -299,13 +327,9 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "DS_csv",
+								"referenceName": "DS_Json",
 								"type": "DatasetReference",
-								"parameters": {
-									"container": "landing",
-									"folder": "API_Data",
-									"file_name": "swapiwa.csv"
-								}
+								"parameters": {}
 							}
 						]
 					}
@@ -317,7 +341,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_Rest')]",
-				"[concat(variables('factoryId'), '/datasets/DS_csv')]"
+				"[concat(variables('factoryId'), '/datasets/DS_Json')]"
 			]
 		}
 	]
