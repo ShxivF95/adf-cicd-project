@@ -49,6 +49,33 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "NB_merge",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "API_to_ADLS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Workspace/Users/shivv@suraksha555.onmicrosoft.com/swapitable"
+				},
+				"linkedServiceName": {
+					"referenceName": "ADB",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"annotations": []
