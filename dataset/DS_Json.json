@@ -1,0 +1,23 @@
+{
+	"name": "DS_Json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "hisADLS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat('swapi_', formatDateTime(utcNow(), 'yyyyMMdd'), '.json')",
+					"type": "Expression"
+				},
+				"folderPath": "API_Data",
+				"fileSystem": "landing"
+			}
+		},
+		"schema": {}
+	}
+}

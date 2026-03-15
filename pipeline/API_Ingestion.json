@@ -25,14 +25,14 @@
 						}
 					},
 					"sink": {
-						"type": "DelimitedTextSink",
+						"type": "JsonSink",
 						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
+							"type": "AzureBlobFSWriteSettings",
+							"copyBehavior": "FlattenHierarchy"
 						},
 						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
+							"type": "JsonWriteSettings",
+							"filePattern": "setOfObjects"
 						}
 					},
 					"enableStaging": false,
@@ -41,7 +41,7 @@
 						"mappings": [
 							{
 								"source": {
-									"path": "$['results'][0]['name']"
+									"path": "$['name']"
 								},
 								"sink": {
 									"name": "name"
@@ -179,13 +179,8 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DS_csv",
-						"type": "DatasetReference",
-						"parameters": {
-							"container": "landing",
-							"folder": "API_Data",
-							"file_name": "swapiwa.csv"
-						}
+						"referenceName": "DS_Json",
+						"type": "DatasetReference"
 					}
 				]
 			}
