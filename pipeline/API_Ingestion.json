@@ -21,7 +21,7 @@
 						"requestInterval": "00.00:00:00.010",
 						"requestMethod": "GET",
 						"paginationRules": {
-							"AbsoluteUrl": "$.next"
+							"AbsoluteUrl": "$.$.next"
 						}
 					},
 					"sink": {
@@ -41,130 +41,97 @@
 						"mappings": [
 							{
 								"source": {
-									"path": "$['name']"
-								},
-								"sink": {
-									"name": "name"
+									"path": "$['count']"
 								}
 							},
 							{
 								"source": {
-									"path": "$['results'][0]['height']"
-								},
-								"sink": {
-									"name": "height"
+									"path": "$['next']"
 								}
 							},
 							{
 								"source": {
-									"path": "$['results'][0]['mass']"
-								},
-								"sink": {
-									"name": "mass"
+									"path": "$['previous']"
 								}
 							},
 							{
 								"source": {
-									"path": "$['results'][0]['hair_color']"
-								},
-								"sink": {
-									"name": "hair_color"
+									"path": "['name']"
 								}
 							},
 							{
 								"source": {
-									"path": "$['results'][0]['skin_color']"
-								},
-								"sink": {
-									"name": "skin_color"
+									"path": "['height']"
 								}
 							},
 							{
 								"source": {
-									"path": "$['results'][0]['eye_color']"
-								},
-								"sink": {
-									"name": "eye_color"
+									"path": "['mass']"
 								}
 							},
 							{
 								"source": {
-									"path": "$['results'][0]['birth_year']"
-								},
-								"sink": {
-									"name": "birth_year"
+									"path": "['hair_color']"
 								}
 							},
 							{
 								"source": {
-									"path": "$['results'][0]['gender']"
-								},
-								"sink": {
-									"name": "gender"
+									"path": "['skin_color']"
 								}
 							},
 							{
 								"source": {
-									"path": "$['results'][0]['homeworld']"
-								},
-								"sink": {
-									"name": "homeworld"
+									"path": "['eye_color']"
 								}
 							},
 							{
 								"source": {
-									"path": "$['results'][0]['films'][0]"
-								},
-								"sink": {
-									"name": "results'][0]['films']["
+									"path": "['birth_year']"
 								}
 							},
 							{
 								"source": {
-									"path": "$['results'][0]['species'][0]"
-								},
-								"sink": {
-									"name": "results'][0]['species']["
+									"path": "['gender']"
 								}
 							},
 							{
 								"source": {
-									"path": "$['results'][0]['vehicles'][0]"
-								},
-								"sink": {
-									"name": "results'][0]['vehicles']["
+									"path": "['homeworld']"
 								}
 							},
 							{
 								"source": {
-									"path": "$['results'][0]['starships'][0]"
-								},
-								"sink": {
-									"name": "results'][0]['starships']["
+									"path": "['films'][0]"
 								}
 							},
 							{
 								"source": {
-									"path": "$['results'][0]['created']"
-								},
-								"sink": {
-									"name": "created"
+									"path": "['species'][0]"
 								}
 							},
 							{
 								"source": {
-									"path": "$['results'][0]['edited']"
-								},
-								"sink": {
-									"name": "edited"
+									"path": "['vehicles'][0]"
 								}
 							},
 							{
 								"source": {
-									"path": "$['results'][0]['url']"
-								},
-								"sink": {
-									"name": "url"
+									"path": "['starships'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "['created']"
+								}
+							},
+							{
+								"source": {
+									"path": "['edited']"
+								}
+							},
+							{
+								"source": {
+									"path": "['url']"
 								}
 							}
 						],
