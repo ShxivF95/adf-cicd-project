@@ -9,7 +9,7 @@
 		},
 		"LS_Rest_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://swapi.dev/api/people/?page=1"
+			"defaultValue": "https://swapi.dev/api/people/"
 		},
 		"hisADLS_properties_typeProperties_url": {
 			"type": "string",
@@ -44,6 +44,29 @@
 				"type": "AzureBlobFS",
 				"typeProperties": {
 					"url": "[parameters('hisADLS_properties_typeProperties_url')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ADB')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-7405605784158263.3.azuredatabricks.net",
+					"authentication": "MSI",
+					"workspaceResourceId": "/subscriptions/b7abd08a-ff86-4b0d-8d85-c4054fadc0bf/resourceGroups/Suraksha_rest/providers/Microsoft.Databricks/workspaces/databricks-customer-vnet",
+					"newClusterNodeType": "Standard_D4s_v3",
+					"newClusterNumOfWorker": "1",
+					"newClusterSparkEnvVars": {
+						"PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+					},
+					"newClusterVersion": "15.4.x-scala2.12",
+					"clusterOption": "Fixed",
+					"newClusterInitScripts": []
 				}
 			},
 			"dependsOn": []
@@ -130,7 +153,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": {
-							"value": "@concat('swapi_', formatDateTime(utcNow(), 'yyyyMMdd'), '.json')",
+							"value": "@concat('xwapi_', formatDateTime(utcNow(), 'yyyyMMdd'), '.json')",
 							"type": "Expression"
 						},
 						"folderPath": "API_Data",
@@ -168,7 +191,7 @@
 								"requestInterval": "00.00:00:00.010",
 								"requestMethod": "GET",
 								"paginationRules": {
-									"supportRFC5988": "true"
+									"AbsoluteUrl": "$.next"
 								}
 							},
 							"sink": {
@@ -182,141 +205,7 @@
 									"filePattern": "setOfObjects"
 								}
 							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"path": "$['name']"
-										},
-										"sink": {
-											"name": "name"
-										}
-									},
-									{
-										"source": {
-											"path": "$['results'][0]['height']"
-										},
-										"sink": {
-											"name": "height"
-										}
-									},
-									{
-										"source": {
-											"path": "$['results'][0]['mass']"
-										},
-										"sink": {
-											"name": "mass"
-										}
-									},
-									{
-										"source": {
-											"path": "$['results'][0]['hair_color']"
-										},
-										"sink": {
-											"name": "hair_color"
-										}
-									},
-									{
-										"source": {
-											"path": "$['results'][0]['skin_color']"
-										},
-										"sink": {
-											"name": "skin_color"
-										}
-									},
-									{
-										"source": {
-											"path": "$['results'][0]['eye_color']"
-										},
-										"sink": {
-											"name": "eye_color"
-										}
-									},
-									{
-										"source": {
-											"path": "$['results'][0]['birth_year']"
-										},
-										"sink": {
-											"name": "birth_year"
-										}
-									},
-									{
-										"source": {
-											"path": "$['results'][0]['gender']"
-										},
-										"sink": {
-											"name": "gender"
-										}
-									},
-									{
-										"source": {
-											"path": "$['results'][0]['homeworld']"
-										},
-										"sink": {
-											"name": "homeworld"
-										}
-									},
-									{
-										"source": {
-											"path": "$['results'][0]['films'][0]"
-										},
-										"sink": {
-											"name": "results'][0]['films']["
-										}
-									},
-									{
-										"source": {
-											"path": "$['results'][0]['species'][0]"
-										},
-										"sink": {
-											"name": "results'][0]['species']["
-										}
-									},
-									{
-										"source": {
-											"path": "$['results'][0]['vehicles'][0]"
-										},
-										"sink": {
-											"name": "results'][0]['vehicles']["
-										}
-									},
-									{
-										"source": {
-											"path": "$['results'][0]['starships'][0]"
-										},
-										"sink": {
-											"name": "results'][0]['starships']["
-										}
-									},
-									{
-										"source": {
-											"path": "$['results'][0]['created']"
-										},
-										"sink": {
-											"name": "created"
-										}
-									},
-									{
-										"source": {
-											"path": "$['results'][0]['edited']"
-										},
-										"sink": {
-											"name": "edited"
-										}
-									},
-									{
-										"source": {
-											"path": "$['results'][0]['url']"
-										},
-										"sink": {
-											"name": "url"
-										}
-									}
-								],
-								"collectionReference": "$['results']"
-							}
+							"enableStaging": false
 						},
 						"inputs": [
 							{
