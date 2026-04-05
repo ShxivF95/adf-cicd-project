@@ -1,0 +1,12 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+      "value": "adf-test-omg"
+    },
+    "AzureDataLakeStorage1_properties_typeProperties_url": {
+      "value": "https://adlsadftest01.dfs.core.windows.net"
+    }
+  }
+}
