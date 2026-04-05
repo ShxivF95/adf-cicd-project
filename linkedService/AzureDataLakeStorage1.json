@@ -1,0 +1,16 @@
+{
+	"name": "AzureDataLakeStorage1",
+	"properties": {
+		"parameters": {
+			"storage_name": {
+				"type": "string",
+				"defaultValue": "hisadls"
+			}
+		},
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "@{concat('https:\\\\', linkedService().storage_name,\r\n         '.dfs.core.windows.net')}"
+		}
+	}
+}
