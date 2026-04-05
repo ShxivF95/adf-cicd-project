@@ -14,12 +14,43 @@
 		"hisADLS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://hisadls.dfs.core.windows.net/"
+		},
+		"http_swapi_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://swapi.dev"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "@{concat('https:\\\\', linkedService().storage_name,\r\n         '.dfs.core.windows.net')}"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ADB')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-7405605784158263.3.azuredatabricks.net",
+					"authentication": "MSI",
+					"workspaceResourceId": "/subscriptions/b7abd08a-ff86-4b0d-8d85-c4054fadc0bf/resourceGroups/Suraksha_rest/providers/Microsoft.Databricks/workspaces/databricks-customer-vnet",
+					"newClusterNodeType": "Standard_D4s_v3",
+					"newClusterNumOfWorker": "1",
+					"newClusterSparkEnvVars": {
+						"PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+					},
+					"newClusterVersion": "15.4.x-scala2.12",
+					"clusterOption": "Fixed",
+					"newClusterInitScripts": []
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/LS_Rest')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -49,27 +80,66 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ADB')]",
+			"name": "[concat(parameters('factoryName'), '/http_swapi')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"type": "AzureDatabricks",
+				"type": "HttpServer",
 				"typeProperties": {
-					"domain": "https://adb-7405605784158263.3.azuredatabricks.net",
-					"authentication": "MSI",
-					"workspaceResourceId": "/subscriptions/b7abd08a-ff86-4b0d-8d85-c4054fadc0bf/resourceGroups/Suraksha_rest/providers/Microsoft.Databricks/workspaces/databricks-customer-vnet",
-					"newClusterNodeType": "Standard_D4s_v3",
-					"newClusterNumOfWorker": "1",
-					"newClusterSparkEnvVars": {
-						"PYSPARK_PYTHON": "/databricks/python3/bin/python3"
-					},
-					"newClusterVersion": "15.4.x-scala2.12",
-					"clusterOption": "Fixed",
-					"newClusterInitScripts": []
+					"url": "[parameters('http_swapi_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"storage_name": {
+						"type": "string",
+						"defaultValue": "hisadls"
+					}
+				},
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_Json')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "hisADLS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat('xwapi_', formatDateTime(utcNow(), 'yyyyMMdd'), '.json')",
+							"type": "Expression"
+						},
+						"folderPath": "API_Data",
+						"fileSystem": "landing"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/hisADLS')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DS_Rest')]",
@@ -87,6 +157,45 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_Rest')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_adls')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "hisADLS",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"targetFolder": {
+						"type": "string"
+					},
+					"fileName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().fileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().targetFolder",
+							"type": "Expression"
+						},
+						"fileSystem": "Dataset"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/hisADLS')]"
 			]
 		},
 		{
@@ -139,31 +248,34 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DS_Json')]",
+			"name": "[concat(parameters('factoryName'), '/DS_http')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "hisADLS",
+					"referenceName": "http_swapi",
 					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"relativeUrl": {
+						"type": "string"
+					}
 				},
 				"annotations": [],
 				"type": "Json",
 				"typeProperties": {
 					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@concat('xwapi_', formatDateTime(utcNow(), 'yyyyMMdd'), '.json')",
+						"type": "HttpServerLocation",
+						"relativeUrl": {
+							"value": "@dataset().relativeUrl",
 							"type": "Expression"
-						},
-						"folderPath": "API_Data",
-						"fileSystem": "landing"
+						}
 					}
 				},
 				"schema": {}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/hisADLS')]"
+				"[concat(variables('factoryId'), '/linkedServices/http_swapi')]"
 			]
 		},
 		{
@@ -221,6 +333,33 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "NB_merge",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "API_to_ADLS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Workspace/Users/shivv@suraksha555.onmicrosoft.com/swapitable"
+						},
+						"linkedServiceName": {
+							"referenceName": "ADB",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"policy": {
@@ -230,7 +369,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_Rest')]",
-				"[concat(variables('factoryId'), '/datasets/DS_Json')]"
+				"[concat(variables('factoryId'), '/datasets/DS_Json')]",
+				"[concat(variables('factoryId'), '/linkedServices/ADB')]"
 			]
 		}
 	]

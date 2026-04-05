@@ -15,6 +15,14 @@
 			"type": "string",
 			"defaultValue": "https://hisadls.dfs.core.windows.net/"
 		},
+		"http_swapi_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://swapi.dev"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "@{concat('https:\\\\', linkedService().storage_name,\r\n         '.dfs.core.windows.net')}"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -47,6 +55,12 @@
 					},
 					"hisADLS_properties_typeProperties_url": {
 						"value": "[parameters('hisADLS_properties_typeProperties_url')]"
+					},
+					"http_swapi_properties_typeProperties_url": {
+						"value": "[parameters('http_swapi_properties_typeProperties_url')]"
+					},
+					"AzureDataLakeStorage1_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
 					}
 				}
 			},

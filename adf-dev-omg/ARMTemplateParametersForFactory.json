@@ -10,6 +10,12 @@
 		},
 		"hisADLS_properties_typeProperties_url": {
 			"value": "https://hisadls.dfs.core.windows.net/"
+		},
+		"http_swapi_properties_typeProperties_url": {
+			"value": "https://swapi.dev"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "@{concat('https:\\\\', linkedService().storage_name,\r\n         '.dfs.core.windows.net')}"
 		}
 	}
 }
